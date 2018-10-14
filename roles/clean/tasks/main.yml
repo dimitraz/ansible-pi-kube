@@ -18,11 +18,11 @@
   become: true
 
 # This deletes all docker images!!!
-# - name: "Remove docker dir"
-#   file:
-#     path: /var/lib/docker/
-#     state: absent
-#   become: true
+- name: "Remove docker dir"
+  file:
+    path: /var/lib/docker/
+    state: absent
+  become: true
 
 # Restart docker
 - name: "Start docker"

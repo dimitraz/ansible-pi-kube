@@ -9,12 +9,18 @@
   become: true 
   register: output
 
+- name: "Check if /.kube/config exists"
+  stat:
+    path: $HOME/.kube/config
+  register: config_dir
+
 - name: "Initialise cluster directory"
   shell: "mkdir -p $HOME/.kube/config/"
+  when: config_dir.stat.exists == False
 
 - name: "Get join token"
   set_fact:
-    join_token: "{{ output.stdout_lines | regex_search('kubeadm join.*') }}"
+    join_token: "{{ output.stdout | regex_search('kubeadm join.*') }}"
   
 - debug:
     msg: "{{ join_token }}"
