@@ -1,9 +1,13 @@
 # Tasks for adding worker nodes to the cluster
 
-- name: Gather facts from the master role
-  setup:
-    filter: join_token
+# Get token from master role variable
+- set_fact:
+    join_token: "{{ hostvars[groups['master'][0]]['join_token'] }}"
+  tags:
+    - token
 
 - name: Join the cluster
   shell: "{{ join_token }}"
-
+  become:
+  tags:
+    - token

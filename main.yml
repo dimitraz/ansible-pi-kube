@@ -1,20 +1,29 @@
 --- 
-# ansible-init
+# Main playbook
 
 - hosts: all
   roles:
     - { role: clean }
     - { role: kube-install }
+  tags:
+    - clean
+    - install
 
 - hosts: master
   roles:
     - { role: master-init }
+  tags: 
+    - init_master
 
 - hosts: nodes
   roles:
     - { role: add-nodes }
+  tags:
+    - init_master
 
 - hosts: master
   tasks:
     - name: Container network 
       shell: "kubectl apply -f https://git.io/weave-kube-1.6"
+  tags:
+    - network
