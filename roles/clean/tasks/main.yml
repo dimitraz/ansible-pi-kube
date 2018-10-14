@@ -1,0 +1,32 @@
+# Tasks for cleaning up the raspberry pis
+
+# Remove logs
+- name: "Clear logs"
+  shell: "tee {{ item }} < /dev/null"
+  with_items:
+    - /var/log/syslog
+    - /var/log/syslog.1
+    - /var/log/daemon.log
+    - /var/log/daemon.log.1
+  become: true
+
+# Stop docker
+- name: "Stop docker"
+  service:
+    name: docker
+    state: stopped
+  become: true
+
+# This deletes all docker images!!!
+# - name: "Remove docker dir"
+#   file:
+#     path: /var/lib/docker/
+#     state: absent
+#   become: true
+
+# Restart docker
+- name: "Start docker"
+  service:
+    name: docker
+    state: started
+  become: true

@@ -1,0 +1,9 @@
+# Tasks for adding worker nodes to the cluster
+
+- name: Gather facts from the master role
+  setup:
+    filter: join_token
+
+- name: Join the cluster
+  shell: "{{ join_token }}"
+

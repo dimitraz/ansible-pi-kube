@@ -1,0 +1,13 @@
+# Tasks for installing kubeadm
+
+# - name: "Get repo key"
+#   shell: "curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -"
+#   become: true
+
+# - name: "Set up repo"
+#   shell: "echo 'deb http://apt.kubernetes.io/ kubernetes-xenial main' > /etc/apt/sources.list.d/kubernetes.list"
+#   become: true
+
+- name: "Install kubeadm & kubectl"
+  shell: "apt-get update && apt-get install -y kubeadm kubelet"
+  become: true

@@ -1,0 +1,25 @@
+# Tasks for initialising the master node
+
+- name: "Reset master"
+  shell: "kubeadm reset -f"
+  become: true 
+
+- name: "Initialise master"
+  shell: "kubeadm init --token-ttl 0"
+  become: true 
+  register: output
+
+- name: "Initialise cluster directory"
+  shell: "mkdir -p $HOME/.kube/config/"
+
+- name: "Get join token"
+  set_fact:
+    join_token: "{{ output.stdout_lines | regex_search('kubeadm join.*') }}"
+  
+- debug:
+    msg: "{{ join_token }}"
+
+- name: "Create kube config"
+  shell: "cp -i /etc/kubernetes/admin.conf $HOME/.kube/config && chown $(id -u):$(id -g) $HOME/.kube/config && export KUBECONFIG=$HOME/.kube/config/admin.conf"
+  tags: 
+    - config
