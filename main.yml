@@ -3,23 +3,16 @@
 
 - hosts: all
   roles:
-    - { role: clean }
-    - { role: kube-install }
-  tags:
-    - clean
-    - install
+    - { role: clean, tags: clean }
+    - { role: kube-install, tags: install }
 
 - hosts: master
   roles:
-    - { role: master-init }
-  tags: 
-    - init_master
+    - { role: master-init, tags: master }
 
 - hosts: nodes
   roles:
-    - { role: add-nodes }
-  tags:
-    - init_master
+    - { role: add-nodes, tags: master }
 
 - hosts: master
   tasks:

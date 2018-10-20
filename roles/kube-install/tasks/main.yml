@@ -8,13 +8,20 @@
   shell: "echo 'deb http://apt.kubernetes.io/ kubernetes-xenial main' > /etc/apt/sources.list.d/kubernetes.list"
   become: true
 
+- name: "Update and upgrade apt packages"
+  become: true
+  apt:
+    upgrade: yes
+    update_cache: yes
+
 - name: "Check if kubeadm is installed"
   shell: "command -v kubeadm"
   register: kubeadm_exists
   ignore_errors: yes
 
 - name: "Install kubeadm"
-  shell: "apt-get update && apt-get install -y kubeadm"
+  apt:
+    name: kubeadm
   when: kubeadm_exists.rc != 0
   become: true
 
@@ -24,7 +31,7 @@
   ignore_errors: yes
 
 - name: "Install kubectl"
-  shell: "apt-get update && apt-get install -y kubectl"
+  apt:
+    name: kubectl
   when: kubectl_exists.rc != 0
   become: true
-

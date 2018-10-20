@@ -3,11 +3,8 @@
 # Get token from master role variable
 - set_fact:
     join_token: "{{ hostvars[groups['master'][0]]['join_token'] }}"
-  tags:
-    - token
 
+# Join the cluster as a node
 - name: Join the cluster
   shell: "{{ join_token }}"
-  become:
-  tags:
-    - token
+  become: true
