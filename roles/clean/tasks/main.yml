@@ -1,6 +1,5 @@
 # Tasks for cleaning up the raspberry pis
 
-# Remove logs
 - name: "Clear logs"
   shell: "tee {{ item }} < /dev/null"
   with_items:
@@ -10,7 +9,20 @@
     - /var/log/daemon.log.1
   become: true
 
-# Stop docker
+- name: "Reset nodes"
+  shell: "kubeadm reset -f"
+  become: true 
+
+- file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - /etc/kubernetes/pki/ca.crt
+    - /etc/kubernetes/kubelet.conf
+    - /etc/kubernetes/bootstrap-kubelet.conf
+  become: true
+  ignore_errors: yes
+
 - name: "Stop docker"
   service:
     name: docker
@@ -24,7 +36,6 @@
     state: absent
   become: true
 
-# Restart docker
 - name: "Start docker"
   service:
     name: docker

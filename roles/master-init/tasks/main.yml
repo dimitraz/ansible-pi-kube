@@ -1,9 +1,5 @@
 # Tasks for initialising the master node
 
-- name: "Reset master"
-  shell: "kubeadm reset -f"
-  become: true 
-
 - name: "Initialise master"
   shell: "kubeadm init --token-ttl 0"
   become: true 
@@ -11,11 +7,11 @@
 
 - name: "Check if /.kube/config exists"
   stat:
-    path: $HOME/.kube/config
+    path: /home/ubuntu/.kube/config
   register: config_dir
 
 - name: "Initialise cluster directory"
-  shell: "mkdir -p $HOME/.kube/config/"
+  shell: "mkdir -p /home/ubuntu/.kube/config/"
   when: config_dir.stat.exists == False
 
 - name: "Get join token"
@@ -26,6 +22,6 @@
     msg: "{{ join_token }}"
 
 - name: "Create kube config"
-  shell: "cp -i /etc/kubernetes/admin.conf $HOME/.kube/config && chown $(id -u):$(id -g) $HOME/.kube/config && export KUBECONFIG=$HOME/.kube/config/admin.conf"
+  shell: "cp -i /etc/kubernetes/admin.conf /home/ubuntu/.kube/config && chown $(id -u):$(id -g) /home/ubuntu/.kube/config && export KUBECONFIG=/home/ubuntu/.kube/config/admin.conf"
   tags: 
     - config
