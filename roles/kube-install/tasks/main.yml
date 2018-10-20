@@ -1,4 +1,4 @@
-# Tasks for installing kubeadm
+# Tasks for installing kubeadm & kubectl
 
 - name: "Get repo key"
   shell: "curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -"
@@ -8,6 +8,23 @@
   shell: "echo 'deb http://apt.kubernetes.io/ kubernetes-xenial main' > /etc/apt/sources.list.d/kubernetes.list"
   become: true
 
-- name: "Install kubeadm & kubectl"
-  shell: "apt-get update && apt-get install -y kubeadm kubelet"
+- name: "Check if kubeadm is installed"
+  shell: "command -v kubeadm"
+  register: kubeadm_exists
+  ignore_errors: yes
+
+- name: "Install kubeadm"
+  shell: "apt-get update && apt-get install -y kubeadm"
+  when: kubeadm_exists.rc != 0
   become: true
+
+- name: "Check if kubectl is installed"
+  shell: "command -v kubectl"
+  register: kubectl_exists
+  ignore_errors: yes
+
+- name: "Install kubectl"
+  shell: "apt-get update && apt-get install -y kubectl"
+  when: kubectl_exists.rc != 0
+  become: true
+
