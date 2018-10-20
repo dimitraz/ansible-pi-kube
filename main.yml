@@ -17,6 +17,6 @@
 - hosts: master
   tasks:
     - name: Container network 
-      shell: "kubectl apply -f https://git.io/weave-kube-1.6"
+      shell: kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')&env.IPALLOC_RANGE=192.168.1.0/24"
   tags:
     - network
